@@ -1,5 +1,7 @@
 package com.odde.atddv2;
 
+import com.odde.atddv2.entity.User;
+import com.odde.atddv2.repo.UserRepo;
 import io.cucumber.java.After;
 import io.cucumber.java.zh_cn.假如;
 import io.cucumber.java.zh_cn.当;
@@ -8,6 +10,7 @@ import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
 
@@ -15,6 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.By.xpath;
 
 public class TestSteps {
+
+    @Autowired
+    private UserRepo userRepo;
+
     private WebDriver webDriver = null;
 
     @SneakyThrows
@@ -43,7 +50,14 @@ public class TestSteps {
     }
 
     @假如("存在用户名为{string}和密码为{string}的用户")
-    public void 存在用户名为和密码为的用户(String arg0, String arg1) {
+    public void 存在用户名为和密码为的用户(String userName, String password) {
+        var isUserNotExisted = userRepo.findByUserNameAndPassword(userName, password).isEmpty();
+        if (isUserNotExisted) {
+            var user = new User()
+                .setUserName(userName)
+                .setPassword(password);
+            userRepo.save(user);
+        }
     }
 
     @当("通过API以用户名为{string}和密码为{string}登录时")
