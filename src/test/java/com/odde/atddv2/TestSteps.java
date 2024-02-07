@@ -7,11 +7,17 @@ import io.cucumber.java.zh_cn.假如;
 import io.cucumber.java.zh_cn.当;
 import io.cucumber.java.zh_cn.那么;
 import lombok.SneakyThrows;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,10 +25,13 @@ import static org.openqa.selenium.By.xpath;
 
 public class TestSteps {
 
+    private final OkHttpClient client = new OkHttpClient().newBuilder().build();
+
     @Autowired
     private UserRepo userRepo;
 
     private WebDriver webDriver = null;
+    private Response response;
 
     @SneakyThrows
     public WebDriver createWebDriver() {
@@ -42,7 +51,9 @@ public class TestSteps {
     }
 
     @那么("打印Token")
-    public void 打印_token() {
+    public void 打印_token() throws IOException {
+        assertThat(response.body()).isNotNull();
+        System.out.println(response.body().string());
     }
 
     @那么("打印百度为您找到的相关结果数")
@@ -61,7 +72,14 @@ public class TestSteps {
     }
 
     @当("通过API以用户名为{string}和密码为{string}登录时")
-    public void 通过api以用户名为和密码为登录时(String arg0, String arg1) {
+    public void 通过api以用户名为和密码为登录时(String userName, String password) throws IOException {
+        var request = new Request.Builder()
+            .url("http://localhost:10081/users/login")
+            .post(RequestBody.create(
+                String.format("{\"userName\":\"%s\",\"password\":\"%s\"}", userName, password),
+                MediaType.parse("application/json")))
+            .build();
+        response = client.newCall(request).execute();
     }
 
     @当("在百度搜索关键字{string}")
