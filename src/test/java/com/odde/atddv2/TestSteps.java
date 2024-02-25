@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -82,8 +83,13 @@ public class TestSteps {
         response = client.newCall(request).execute();
     }
 
-    @当("在百度搜索关键字{string}")
-    public void 在百度搜索关键字(String arg0) {
+    @当("在谷歌搜索关键字{string}")
+    public void 在谷歌搜索关键字(String keyword) {
+        getWebDriver().get("https://www.google.com.tw/");
+        getWebDriver().findElement(By.cssSelector("textarea[name='q']")).sendKeys(keyword);
+        getWebDriver().findElement(By.cssSelector("input[name='btnK']")).click();
+        // or use the following code to query the search result
+        //getWebDriver().findElement(By.cssSelector("textarea[name='q']")).sendKeys(keyword, Keys.RETURN);
     }
 
     private WebDriver getWebDriver() {
