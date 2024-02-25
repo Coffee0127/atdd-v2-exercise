@@ -13,13 +13,16 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.By.xpath;
@@ -57,8 +60,15 @@ public class TestSteps {
         System.out.println(response.body().string());
     }
 
-    @那么("打印百度为您找到的相关结果数")
-    public void 打印百度为您找到的相关结果数() {
+    @那么("打印谷歌为您找到的相关结果数")
+    public void 打印谷歌为您找到的相关结果数() {
+        var wait = new FluentWait<>(getWebDriver())
+            .withTimeout(Duration.ofSeconds(5))
+            .pollingEvery(Duration.ofMillis(200))
+            .ignoring(ElementNotInteractableException.class);
+        var text = wait.until(driver -> driver.findElement(By.id("result-stats")).getText());
+        System.out.println("text = " + text);
+        assertThat(text).matches("^About [0-9,]+ results.*$");
     }
 
     @假如("存在用户名为{string}和密码为{string}的用户")
