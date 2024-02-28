@@ -2,6 +2,7 @@ package com.odde.atddv2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odde.atddv2.entity.User;
+import com.odde.atddv2.page.HomePage;
 import com.odde.atddv2.repo.UserRepo;
 import io.cucumber.java.After;
 import io.cucumber.java.zh_cn.假如;
@@ -24,6 +25,7 @@ import static org.awaitility.Awaitility.await;
 import static org.openqa.selenium.By.xpath;
 
 public class TestSteps {
+    private final HomePage homePage = new HomePage(this);
     @Autowired
     UserRepo userRepo;
     private WebDriver webDriver = null;
@@ -87,12 +89,8 @@ public class TestSteps {
 
     @当("以用户名为{string}和密码为{string}登录时")
     public void 以用户名为和密码为登录时(String userName, String password) {
-        open();
+        homePage.open();
         login(userName, password);
-    }
-
-    private void open() {
-        getWebDriver().get("http://host.docker.internal:10081");
     }
 
     private void login(String userName, String password) {
