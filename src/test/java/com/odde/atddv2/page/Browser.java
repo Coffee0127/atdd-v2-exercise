@@ -16,7 +16,7 @@ import java.util.Objects;
 public class Browser {
     WebDriver webDriver = null;
 
-    void open() {
+    public void open() {
         getWebDriver().get("http://host.docker.internal:10081");
     }
 
@@ -28,7 +28,7 @@ public class Browser {
         Awaitility.await().ignoreExceptions().until(() -> getWebDriver().findElement(By.xpath("//*[text()='" + text + "']")), Objects::nonNull).click();
     }
 
-    void shouldHaveText(String text) {
+    public void shouldHaveText(String text) {
         Awaitility.await().ignoreExceptions().untilAsserted(() -> Assertions.assertThat(getWebDriver().findElements(By.xpath("//*[text()='" + text + "']"))).isNotEmpty());
     }
 

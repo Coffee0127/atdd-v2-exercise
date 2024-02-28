@@ -2,6 +2,7 @@ package com.odde.atddv2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odde.atddv2.entity.User;
+import com.odde.atddv2.page.Browser;
 import com.odde.atddv2.page.HomePage;
 import com.odde.atddv2.repo.UserRepo;
 import io.cucumber.java.After;
@@ -30,6 +31,8 @@ public class TestSteps {
     @Autowired
     private HomePage homePage;
     @Autowired
+    private Browser browser;
+    @Autowired
     UserRepo userRepo;
     private WebDriver webDriver = null;
     private Response response;
@@ -51,7 +54,7 @@ public class TestSteps {
             webDriver.quit();
             webDriver = null;
         }
-        homePage.quitWebDriver();
+        browser.quitWebDriver();
     }
 
     @那么("打印Token")
@@ -93,18 +96,18 @@ public class TestSteps {
 
     @当("以用户名为{string}和密码为{string}登录时")
     public void 以用户名为和密码为登录时(String userName, String password) {
-        homePage.open();
+        browser.open();
         homePage.login(userName, password);
     }
 
     @那么("{string}登录成功")
     public void 登录成功(String userName) {
-        homePage.shouldHaveText("Welcome " + userName);
+        browser.shouldHaveText("Welcome " + userName);
     }
 
     @那么("登录失败的错误信息是{string}")
     public void 登录失败的错误信息是(String message) {
-        homePage.shouldHaveText(message);
+        browser.shouldHaveText(message);
     }
 
     public WebDriver getWebDriver() {
