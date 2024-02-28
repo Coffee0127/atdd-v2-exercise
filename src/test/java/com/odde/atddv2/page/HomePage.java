@@ -20,12 +20,24 @@ public class HomePage {
     }
 
     public void login(String userName, String password) {
-        await().ignoreExceptions().until(() -> getWebDriver().findElement(xpath("//*[@placeholder='用户名']")), Objects::nonNull).sendKeys(userName);
-        await().ignoreExceptions().until(() -> getWebDriver().findElement(xpath("//*[@placeholder='密码']")), Objects::nonNull).sendKeys(password);
-        await().ignoreExceptions().until(() -> getWebDriver().findElement(xpath("//*[text()='登录']")), Objects::nonNull).click();
+        inputByPlaceholder("用户名", userName);
+        inputByPlaceholder("密码", password);
+        clickByText("登录");
+    }
+
+    private void inputByPlaceholder(String placeholder, String userName) {
+        await().ignoreExceptions().until(() -> getWebDriver().findElement(xpath("//*[@placeholder='" + placeholder + "']")), Objects::nonNull).sendKeys(userName);
+    }
+
+    private void clickByText(String text) {
+        await().ignoreExceptions().until(() -> getWebDriver().findElement(xpath("//*[text()='" + text + "']")), Objects::nonNull).click();
     }
 
     public void shouldHaveText(String text) {
+        shouldHaveText2(text);
+    }
+
+    private void shouldHaveText2(String text) {
         await().ignoreExceptions().untilAsserted(() -> assertThat(getWebDriver().findElements(xpath("//*[text()='" + text + "']"))).isNotEmpty());
     }
 
