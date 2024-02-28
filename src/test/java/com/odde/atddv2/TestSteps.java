@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.By.xpath;
 
 public class TestSteps {
-    private final HomePage homePage = new HomePage(this);
+    private final HomePage homePage = new HomePage();
     @Autowired
     UserRepo userRepo;
     private WebDriver webDriver = null;
@@ -50,6 +50,7 @@ public class TestSteps {
             webDriver.quit();
             webDriver = null;
         }
+        homePage.quitWebDriver();
     }
 
     @那么("打印Token")
@@ -92,17 +93,17 @@ public class TestSteps {
     @当("以用户名为{string}和密码为{string}登录时")
     public void 以用户名为和密码为登录时(String userName, String password) {
         homePage.open();
-        homePage.login(userName, password, this);
+        homePage.login(userName, password);
     }
 
     @那么("{string}登录成功")
     public void 登录成功(String userName) {
-        homePage.shouldHaveText("Welcome " + userName, this);
+        homePage.shouldHaveText("Welcome " + userName);
     }
 
     @那么("登录失败的错误信息是{string}")
     public void 登录失败的错误信息是(String message) {
-        homePage.shouldHaveText(message, this);
+        homePage.shouldHaveText(message);
     }
 
     public WebDriver getWebDriver() {
