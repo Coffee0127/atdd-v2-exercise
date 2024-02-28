@@ -9,7 +9,11 @@ import io.cucumber.java.zh_cn.假如;
 import io.cucumber.java.zh_cn.当;
 import io.cucumber.java.zh_cn.那么;
 import lombok.SneakyThrows;
-import okhttp3.*;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -20,7 +24,6 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.openqa.selenium.By.xpath;
 
 public class TestSteps {
@@ -94,16 +97,12 @@ public class TestSteps {
 
     @那么("{string}登录成功")
     public void 登录成功(String userName) {
-        shouldHaveText("Welcome " + userName);
-    }
-
-    private void shouldHaveText(String text) {
-        await().ignoreExceptions().untilAsserted(() -> assertThat(getWebDriver().findElements(xpath("//*[text()='" + text + "']"))).isNotEmpty());
+        homePage.shouldHaveText("Welcome " + userName, this);
     }
 
     @那么("登录失败的错误信息是{string}")
     public void 登录失败的错误信息是(String message) {
-        shouldHaveText(message);
+        homePage.shouldHaveText(message, this);
     }
 
     public WebDriver getWebDriver() {
